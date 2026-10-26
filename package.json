@@ -1,0 +1,48 @@
+{
+  "name": "nvaid",
+  "version": "0.3.2",
+  "description": "nvaid \u2014 one CLI that installs an AI-DLC skills-and-workflow toolkit into any coding agent, and houses intents, config, and the design-code dictionary in a single nvaid/ folder.",
+  "type": "module",
+  "bin": {
+    "nvaid": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup src/cli.ts --format esm --clean",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai-dlc",
+    "coding-agent",
+    "skills",
+    "scaffold",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "commander": "^12.0.0",
+    "picocolors": "^1.0.0",
+    "yaml": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^5.0.3"
+  },
+  "overrides": {
+    "esbuild": "^0.28.2"
+  }
+}

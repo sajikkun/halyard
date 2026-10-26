@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        # vitest exits 0 with "no test files" today; this gate tightens automatically
+        # once real tests land under test/.
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify the publish tarball contains dist/ + templates/
+        run: |
+          npm pack --dry-run 2>&1 | tee /tmp/pack.txt
+          grep -q "dist/cli.js" /tmp/pack.txt || { echo "::error::dist/cli.js missing from tarball"; exit 1; }
+          grep -q "templates/skills/" /tmp/pack.txt || { echo "::error::templates/ missing from tarball"; exit 1; }

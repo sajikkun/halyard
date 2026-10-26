@@ -1,0 +1,55 @@
+name: Publish to npm
+
+# Publishing is deliberate: it runs when a version tag (v*) is pushed, NOT on every
+# merge to master. A tag both names the version and triggers the release.
+#   1. merge the version bump to master (CI runs)
+#   2. git tag v0.2.6 && git push origin v0.2.6   (this workflow publishes)
+#
+# Publishes to the public npm registry. Requires an NPM_TOKEN repository secret
+# (an npm automation token with publish rights).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Verify tag matches package.json version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::tag v$TAG does not match package.json version $PKG"
+            exit 1
+          fi
+          echo "Publishing version $PKG to npm"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
