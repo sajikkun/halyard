@@ -22,7 +22,7 @@ another's (`.claude/`, `.kiro/`, `.cursor/`, …).
 ## Install & use
 
 ```bash
-npm i -g halyard     # or on demand: npx halyard <command>
+npm i -g @sajikkun/halyard     # or on demand: npx @sajikkun/halyard <command>
 
 cd your-repo
 hyd init                 # pick agents and a mode, inject skills + slash commands, drop halyard/
@@ -46,7 +46,7 @@ tool installed on your machine — it does not upgrade the tool itself:
 
 ```bash
 # 1. upgrade the tool (once per machine, when a new version ships)
-npm i -g halyard@latest
+npm i -g @sajikkun/halyard@latest
 
 # 2. re-sync each repo to the new version (run inside each repo)
 hyd update
@@ -199,7 +199,7 @@ templates, and the `halyard/` folder — and exits; the output has no runtime de
 Node. A Python repo just runs the command once:
 
 ```bash
-npx halyard init
+npx @sajikkun/halyard init
 ```
 
 Nothing is added to the target project itself (no `devDependency`, no Node toolchain in

@@ -16,7 +16,7 @@ import { join } from "node:path";
 import pc from "picocolors";
 import { halyardVersion } from "./paths.js";
 
-const PKG = "halyard";
+const PKG = "@sajikkun/halyard";
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // once a day
 const FETCH_TIMEOUT_MS = 1500;
 

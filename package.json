@@ -1,7 +1,7 @@
 {
-  "name": "halyard",
+  "name": "@sajikkun/halyard",
   "version": "0.1.0",
-  "description": "halyard \u2014 one CLI (`hyd`) that installs an AI-DLC skills-and-workflow toolkit into any coding agent, for a team or a solo developer, and keeps intents, config, and the design-code dictionary in a single halyard/ folder.",
+  "description": "halyard — one CLI (`hyd`) that installs an AI-DLC skills-and-workflow toolkit into any coding agent, for a team or a solo developer, and keeps intents, config, and the design-code dictionary in a single halyard/ folder.",
   "type": "module",
   "repository": {
     "type": "git",
@@ -50,5 +50,8 @@
   },
   "overrides": {
     "esbuild": "^0.28.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
