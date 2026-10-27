@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "halyard \u2014 one CLI (`hyd`) that installs an AI-DLC skills-and-workflow toolkit into any coding agent, for a team or a solo developer, and keeps intents, config, and the design-code dictionary in a single halyard/ folder.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sajikkun/halyard.git"
+  },
   "bin": {
     "hyd": "dist/cli.js",
     "halyard": "dist/cli.js"
