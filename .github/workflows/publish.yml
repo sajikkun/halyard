@@ -1,8 +1,8 @@
 name: Publish to npm
 
 # Publishing is deliberate: it runs when a version tag (v*) is pushed, NOT on every
-# merge to master. A tag both names the version and triggers the release.
-#   1. merge the version bump to master (CI runs)
+# merge to main. A tag both names the version and triggers the release.
+#   1. merge the version bump to main (CI runs)
 #   2. git tag v0.2.6 && git push origin v0.2.6   (this workflow publishes)
 #
 # Publishes to the public npm registry. Requires an NPM_TOKEN repository secret
