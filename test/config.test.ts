@@ -8,13 +8,13 @@ import {
   hasConfig,
   isInstalled,
   configPath,
-  type NvaidConfig,
+  type HalyardConfig,
 } from "../src/config.js";
 
 // A representative config.yml with the comments, the tech_stack list fields, the
 // architects block, and the install gate — i.e. the shape the field-patcher must not break.
-const SAMPLE = `# nvaid project config — HAND-OWNED.
-schema: nvaid/v1
+const SAMPLE = `# halyard project config — HAND-OWNED.
+schema: halyard/v1
 
 install:
   config: false
@@ -53,8 +53,8 @@ generated_with: "0.2.0"
 let dir: string;
 
 beforeEach(async () => {
-  dir = await mkdtemp(join(tmpdir(), "nvaid-cfg-"));
-  await mkdir(join(dir, "nvaid"), { recursive: true });
+  dir = await mkdtemp(join(tmpdir(), "halyard-cfg-"));
+  await mkdir(join(dir, "halyard"), { recursive: true });
   await writeFile(configPath(dir), SAMPLE, "utf8");
 });
 
@@ -63,9 +63,9 @@ afterEach(async () => {
 });
 
 describe("hasConfig", () => {
-  it("true when nvaid/config.yml exists, false otherwise", async () => {
+  it("true when halyard/config.yml exists, false otherwise", async () => {
     expect(hasConfig(dir)).toBe(true);
-    const empty = await mkdtemp(join(tmpdir(), "nvaid-empty-"));
+    const empty = await mkdtemp(join(tmpdir(), "halyard-empty-"));
     expect(hasConfig(empty)).toBe(false);
     await rm(empty, { recursive: true, force: true });
   });
@@ -78,7 +78,7 @@ describe("readConfig", () => {
   });
 
   it("coerces missing/odd install values to false (never undefined)", async () => {
-    await writeFile(configPath(dir), "schema: nvaid/v1\n", "utf8");
+    await writeFile(configPath(dir), "schema: halyard/v1\n", "utf8");
     const c = await readConfig(dir);
     expect(c.install).toEqual({ config: false, project_rules: false, design_code_dictionary: false });
   });
@@ -97,8 +97,9 @@ describe("readConfig", () => {
 });
 
 describe("isInstalled", () => {
-  const base: NvaidConfig = {
-    schema: "nvaid/v1",
+  const base: HalyardConfig = {
+    schema: "halyard/v1",
+    mode: "team",
     install: { config: true, project_rules: true, design_code_dictionary: true },
     project_name: "x",
     owning_repo: "frontend",
@@ -119,6 +120,26 @@ describe("isInstalled", () => {
     expect(isInstalled({ ...base, install: { ...base.install, config: false } })).toBe(false);
     expect(isInstalled({ ...base, install: { ...base.install, project_rules: false } })).toBe(false);
     expect(isInstalled({ ...base, install: { ...base.install, design_code_dictionary: false } })).toBe(false);
+  });
+});
+
+describe("readConfig — mode", () => {
+  it("defaults to team when config.yml predates modes", async () => {
+    expect((await readConfig(dir)).mode).toBe("team");
+  });
+
+  it("falls back to team for an unknown mode value", async () => {
+    await writeFile(configPath(dir), SAMPLE.replace("schema: halyard/v1", 'schema: halyard/v1\nmode: "pair"'), "utf8");
+    expect((await readConfig(dir)).mode).toBe("team");
+  });
+
+  it("setConfigFields adds the mode key when absent, then patches it in place", async () => {
+    await setConfigFields(dir, { mode: "solo" });
+    expect((await readConfig(dir)).mode).toBe("solo");
+    await setConfigFields(dir, { mode: "team" });
+    const text = await readFile(configPath(dir), "utf8");
+    expect(text.match(/^mode:/gm)).toHaveLength(1);
+    expect((await readConfig(dir)).mode).toBe("team");
   });
 });
 
@@ -145,7 +166,7 @@ describe("setConfigFields — surgical patching", () => {
   it("preserves comments and the architects block", async () => {
     await setConfigFields(dir, { agents: ["claude"], owning_repo: "backend" });
     const text = await readFile(configPath(dir), "utf8");
-    expect(text).toContain("# nvaid project config — HAND-OWNED.");
+    expect(text).toContain("# halyard project config — HAND-OWNED.");
     expect(text).toContain("architects:");
     expect(text).toContain('customer_experience: "<name>"');
     // the install block survives untouched

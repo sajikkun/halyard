@@ -2,7 +2,7 @@
 name: r3-analytics
 description: Gathers checkpoint-to-checkpoint performance indicators (lead time, gate pass rate, escaped defects, Known Gaps) for R3's Retrospective step. Use when asked to run the R3 Analytics Skill or prepare Retrospective data after a Release Checkpoint ships.
 invoked_by: R3 (Ceremony 4), triggered by a Release Checkpoint shipping
-output: file — nvaid/process/retro-<checkpoint>.md
+output: file — halyard/process/retro-<checkpoint>.md
 ---
 
 # R3 Analytics Skill
@@ -17,7 +17,7 @@ looks at, so "what does the data actually say" has an answer ready the moment R3
    escaped defects logged against this checkpoint's Units.
 3. Roll up every Known Gap logged across this checkpoint's Quality Architecture
    Contracts — a gap doesn't disappear just because the checkpoint shipped.
-4. Draft `nvaid/process/retro-<checkpoint>.md` with the above, structured for the room to
+4. Draft `halyard/process/retro-<checkpoint>.md` with the above, structured for the room to
    read before proposing Regenerate edits.
 
 ## Boundaries

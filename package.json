@@ -1,10 +1,11 @@
 {
-  "name": "nvaid",
-  "version": "0.3.2",
-  "description": "nvaid \u2014 one CLI that installs an AI-DLC skills-and-workflow toolkit into any coding agent, and houses intents, config, and the design-code dictionary in a single nvaid/ folder.",
+  "name": "halyard",
+  "version": "0.1.0",
+  "description": "halyard \u2014 one CLI (`hyd`) that installs an AI-DLC skills-and-workflow toolkit into any coding agent, for a team or a solo developer, and keeps intents, config, and the design-code dictionary in a single halyard/ folder.",
   "type": "module",
   "bin": {
-    "nvaid": "dist/cli.js"
+    "hyd": "dist/cli.js",
+    "halyard": "dist/cli.js"
   },
   "files": [
     "dist",
@@ -25,9 +26,10 @@
     "coding-agent",
     "skills",
     "scaffold",
-    "cli"
+    "cli",
+    "solo-developer"
   ],
-  "author": "",
+  "author": "Jhay Bagas",
   "license": "MIT",
   "dependencies": {
     "@clack/prompts": "^0.7.0",

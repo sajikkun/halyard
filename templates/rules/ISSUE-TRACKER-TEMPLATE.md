@@ -12,7 +12,7 @@ status: draft
 **What this file is:** the field shape and creation rules for how Fig. 2's Intent-to-Release
 artifacts show up in GitHub Projects — one Epic per Intent, one Story or Bug per
 Unit of Work, bundled for shipping by Release Checkpoint rather than by sprint — so the
-tracker and the `nvaid/` artifacts never disagree about what was decided.
+tracker and the `halyard/` artifacts never disagree about what was decided.
 
 **What this file is not:** not a replacement for `intent.md`, `unit-breakdown.md`, or any
 contract file. The tracker is the *tracking* layer — status, ownership, checkpoint
@@ -45,7 +45,7 @@ A ticket holds three kinds of information, and only two of them belong in ticket
 2. **Links to content** (the Intent, the contracts, the design docs) — belongs in ticket
    fields, as links, never as pasted text.
 3. **The content itself** (what the API contract actually says, what the acceptance
-   criteria actually are) — belongs *only* in the `nvaid/` artifact. Pasting it into
+   criteria actually are) — belongs *only* in the `halyard/` artifact. Pasting it into
    a ticket description creates a second copy that drifts the first time either one is
    edited without the other, and the AI agent isn't the one reading the ticket anyway — it
    reads the file.

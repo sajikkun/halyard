@@ -10,8 +10,8 @@ status: draft
 
 # {{PROJECT_NAME}} — Design-Code Dictionary
 
-> **Template dropped by `nvaid init` — HAND-OWNED, fill this in.**
-> `nvaid update` never overwrites this file. Delete these template notes once you have
+> **Template dropped by `hyd init` — HAND-OWNED, fill this in.**
+> `hyd update` never overwrites this file. Delete these template notes once you have
 > real content.
 
 **What this file is:** a *technical README for the code* — the specs and design patterns
@@ -24,7 +24,7 @@ it. It answers two questions without opening the source: **"where does this live
 
 - Not a replacement for reading the code when making a change — it is a navigation aid for
   deciding whether a change is safe and who should review it.
-- Not a product spec. `nvaid/PROJECT-RULES.md` says what to build and how; this file says
+- Not a product spec. `halyard/PROJECT-RULES.md` says what to build and how; this file says
   where that intent actually landed, after the fact.
 - Not a promise of completeness. §5 exists so this file can honestly state what it has not
   mapped yet, rather than implying coverage it doesn't have.
@@ -37,7 +37,7 @@ trusted and wrong.
 
 ## 1. Tech stack & toolchain
 
-The authoritative, structured stack lives in **`nvaid/config.yml` → `tech_stack`** (that is
+The authoritative, structured stack lives in **`halyard/config.yml` → `tech_stack`** (that is
 what agents and the CLI read). Don't duplicate it here — instead, add the *narrative* this
 file is for: why each major choice was made, how the pieces fit together, and any
 non-obvious interactions or constraints a contributor should know before changing them.
@@ -87,4 +87,4 @@ claim of full coverage, and should only be empty when that's actually true.>
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| 0.1.0 | <YYYY-MM-DD> | Initial draft from the nvaid template | <name> |
+| 0.1.0 | <YYYY-MM-DD> | Initial draft from the halyard template | <name> |

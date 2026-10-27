@@ -10,6 +10,11 @@ output: link — a GitHub Projects ticket
 Creates and updates Epics, Stories, and Bugs per `{{AIDLC_ROOT}}/ISSUE-TRACKER-TEMPLATE.md`
 — so ticket shape never drifts from one Intent to the next.
 
+{{#solo}}
+In solo mode the board is optional: if `halyard/config.yml` → `family.project_board` is
+empty, there's nothing to create. Say so and stop (`{{AIDLC_ROOT}}/solo-mode-rules.md` §5).
+
+{{/solo}}
 ## Steps
 
 1. On Unit Breakdown (Mob Elaboration Phase 5), create one Story or Bug per Unit,

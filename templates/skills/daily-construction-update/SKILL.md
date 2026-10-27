@@ -1,5 +1,6 @@
 ---
 name: daily-construction-update
+modes: [team]
 description: Generates the daily three-question Construction digest (Completed / In Progress / Impediments) and publishes it to Wiki.js. Use when asked to run the Daily Construction Update Skill or produce today's construction update.
 invoked_by: Mob Construction (Ceremony 2) — background, no meeting
 output: link — a Wiki.js page, updated in place

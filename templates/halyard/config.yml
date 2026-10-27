@@ -1,29 +1,42 @@
-# nvaid project config — HAND-OWNED. `nvaid update` never overwrites this file.
+# halyard project config — HAND-OWNED. `hyd update` never overwrites this file.
 #
 # This is the one place a repo declares who and what it is in the AI-DLC workflow:
-#   - which coding agents nvaid targets here,
+#   - which coding agents halyard targets here,
 #   - what tier/role this repo plays,
 #   - the full tech stack of the project,
+{{#team}}
 #   - who the named architects are that sign off on each contract,
+{{/team}}
+{{#solo}}
+#   - who the developer is that signs off every gate,
+{{/solo}}
 #   - the always-on project context every agent should carry.
 #
-# Written by `nvaid init`, then yours to maintain. The skills and slash commands read
+# Written by `hyd init`, then yours to maintain. The skills and slash commands read
 # this file to know, for example, who a drafted contract is "awaiting sign-off" from.
 
-schema: nvaid/v1
+schema: halyard/v1
 
-# Installation gate. `nvaid init` scaffolds empty templates; the /nvaid:install SKILL
+# Workflow mode, chosen at `hyd init`:
+#   team — named architects sign off per-role contracts; gates are approved + merged PRs.
+#   solo — one developer owns every role; Elaboration writes one design.md; gates are PRs
+#          the developer merges (halyard/rules/solo-mode-rules.md).
+# To switch, change this value (and replace `architects:` with `developer:` or back),
+# then run `hyd update`.
+mode: "team"
+
+# Installation gate. `hyd init` scaffolds empty templates; the /hyd:install SKILL
 # then scans the project and fills in all three required documents. The workflow commands
-# (/nvaid:intent, :contracts, :breakdown, :apply) are BLOCKED until install is complete —
+# (/hyd:intent, :contracts, :breakdown, :apply) are BLOCKED until install is complete —
 # running them against unfilled templates would produce hollow, confidently-wrong output.
 #
-# Each flag is set to true by /nvaid:install only once that document is genuinely filled
+# Each flag is set to true by /hyd:install only once that document is genuinely filled
 # (not left as <placeholder> template text) and a human has confirmed it. The install is
 # "complete" when all three are true.
 install:
   config: false              # project_name, owning_repo, tech_stack, architects all set
-  project_rules: false       # nvaid/PROJECT-RULES.md authored (not the template skeleton)
-  design_code_dictionary: false  # nvaid/DESIGN-CODE-DICTIONARY.md authored (not the skeleton)
+  project_rules: false       # halyard/PROJECT-RULES.md authored (not the template skeleton)
+  design_code_dictionary: false  # halyard/DESIGN-CODE-DICTIONARY.md authored (not the skeleton)
 
 # A short name for this project/repo, used in generated artifact headers
 # (replaces the {{PROJECT_NAME}} placeholder in PROJECT-RULES.md and the dictionary).
@@ -35,22 +48,31 @@ project_name: "<set-me>"
 # frontend | backend | platform | <other>.
 owning_repo: "<set-at-init>"
 
-# The repo family these shared rules coordinate across (nvaid/rules/family-rules.md 14/15).
+# The repo family these shared rules coordinate across (halyard/rules/family-rules.md 14/15).
 # Set this EXPLICITLY — the family-wide Intent/ADR numbering checks resolve siblings from
 # here, NOT from a blanket `gh repo list <owner>` (which would wrongly pull in unrelated
-# repos, including nvaid itself and any future non-family project).
+# repos, including halyard itself and any future non-family project).
 family:
   owner: ""            # org/owner that holds the board + repos (e.g. "acme")
+{{#team}}
   project_board: ""    # the shared tracker board number these rules coordinate on (e.g. "19")
+{{/team}}
+{{#solo}}
+  project_board: ""    # optional in solo mode — leave empty to work without GitHub Projects
+{{/solo}}
   repos: []            # explicit family members, e.g.
                        #   ["acme/shop-frontend", "acme/shop-backend"]
+{{#solo}}
+                       # list just this repo if it's the only one; split frontend/backend
+                       # into separate repos whenever you want them forked or published apart
+{{/solo}}
   # github_topic: ""   # alternative to `repos`: resolve the family by a GitHub topic
 
 # The full tech stack of this project. This is the STRUCTURED, machine-readable source of
 # truth that agents and the CLI key off — e.g. a skill checks `languages` before proposing
 # a dependency, or picks the right test command from `test`. Keep it factual and short;
 # the narrative "why we chose this / how it fits together" belongs in
-# nvaid/DESIGN-CODE-DICTIONARY.md, which references this block rather than repeating it.
+# halyard/DESIGN-CODE-DICTIONARY.md, which references this block rather than repeating it.
 #
 # Leave a field blank or omit it if it doesn't apply. `additional` is an open map for
 # anything the fixed fields don't cover (message brokers, infra, cloud, auth providers…).
@@ -66,6 +88,7 @@ tech_stack:
   deploy: ""                    # e.g. "Docker + Kubernetes", "GitHub Pages"
   additional: {}                # e.g. { cache: "Redis", broker: "RabbitMQ", auth: "OIDC" }
 
+{{#team}}
 # Named architects who sign off on each role's Architecture Contract.
 #
 # These are SIGN-OFF / OWNERSHIP identities: the person accountable for approving that
@@ -80,21 +103,28 @@ architects:
   customer_experience: "<name>"  # Customer Experience Architect (BA / PM)
   # add any project-specific roles here, e.g.:
   # devops: "<name>"
+{{/team}}
+{{#solo}}
+# The one developer who owns every role and passes every gate by merging its PR.
+# A SIGN-OFF identity: the AI drafts each design.md section and flags it "awaiting your
+# sign-off"; it never signs or merges on your behalf (propose, don't dispose).
+developer: "<name>"
+{{/solo}}
 
-# Coding agents nvaid injected skills into. `nvaid update` regenerates exactly these.
-# Managed by init/update; change via `nvaid init` rather than by hand.
+# Coding agents halyard injected skills into. `hyd update` regenerates exactly these.
+# Managed by init/update; change via `hyd init` rather than by hand.
 agents: []
 
 # Optional project context passed to every agent — constraints an agent can't infer
 # from the code. Keep discoverable codebase facts OUT (same discipline as openspec).
-# The project's full guardrails live in nvaid/PROJECT-RULES.md (fill in that template);
+# The project's full guardrails live in halyard/PROJECT-RULES.md (fill in that template);
 # this field is just the short, always-on context.
 # Example:
 #   context: |
 #     On-premises only. No cloud targets.
-#     See nvaid/PROJECT-RULES.md for the approved stack and gates.
+#     See halyard/PROJECT-RULES.md for the approved stack and gates.
 context: ""
 
-# nvaid version this repo was last generated against. `nvaid validate` compares the
+# halyard version this repo was last generated against. `hyd validate` compares the
 # installed CLI version to this and flags drift.
-generated_with: "0.3.2"
+generated_with: "0.1.0"

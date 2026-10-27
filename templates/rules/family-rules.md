@@ -9,26 +9,26 @@ status: generated
 
 > These rules are cross-repo **identical** by design — every repo in the family carries the
 > same text, which is why they live in this synced, generated file rather than in each
-> repo's hand-owned PROJECT-RULES. A hand-edit here is a drift bug `nvaid validate` flags.
+> repo's hand-owned PROJECT-RULES. A hand-edit here is a drift bug `hyd validate` flags.
 
-These extend `nvaid/PROJECT-RULES.md` §7 rules 1–10. Rules 1–10 are per-repo guardrails;
+These extend `halyard/PROJECT-RULES.md` §7 rules 1–10. Rules 1–10 are per-repo guardrails;
 these are **family-wide** — they coordinate work *across* the repos listed in
-`nvaid/config.yml` → `family`, so they must read identically everywhere.
+`halyard/config.yml` → `family`, so they must read identically everywhere.
 
 Who the "family" is, and which shared board these rules reference, is **not hardcoded** —
-it comes from `nvaid/config.yml`:
+it comes from `halyard/config.yml`:
 
 ```yaml
 family:
   repos: []            # the repos in this family (e.g. ["acme/shop-frontend", ...])
                        #   or a github_topic to resolve the set — NOT a blanket org list,
-                       #   which would wrongly pull in unrelated repos (incl. nvaid itself).
+                       #   which would wrongly pull in unrelated repos (incl. halyard itself).
   project_board: ""    # the shared tracker board these rules coordinate on (e.g. "19")
   owner: ""            # the org/owner that holds the board + repos
 ```
 
 11. **Create and maintain issue-tracker tickets, but never assign one to a Release
-    Checkpoint.** Per `nvaid/rules/ISSUE-TRACKER-TEMPLATE.md`: create the Epic (per Intent)
+    Checkpoint.** Per `halyard/rules/ISSUE-TRACKER-TEMPLATE.md`: create the Epic (per Intent)
     and its Story/Bug children (per Unit of Work) as soon as the Decomposition Approved
     gate passes, keep their status/gate fields current, and link to the artifact that
     contains the content — never paste it into the ticket. Work flows continuously
@@ -36,22 +36,39 @@ family:
     **Milestones**), not sprints. Checkpoint assignment is the CX Architect's priority
     call carried out by the Process Facilitator — never an automatic next step the agent
     takes. (GitHub Projects is the only tracker; there is no Jira in this family.)
+{{#team}}
     **Elaboration has two gates, each a PR merge on `develop`:** **Intent Approved** = the
     stage-1 `intent/` PR (holding `intent.md` only) is approved and merged; **Decomposition
     Approved** = the stage-2 `elaboration/` PR (holding `contracts/` and
     `unit-breakdown.md`) is approved and merged. They're separate PRs because branch
     protection dismisses an approval on every new push, so one PR can't carry both gates.
+{{/team}}
+{{#solo}}
+    **Solo mode:** the tracker is optional. When `family.project_board` is empty, skip the
+    ticket steps and treat `design.md` §7 as the backlog. Checkpoint assignment is the
+    developer's call, still never automatic. **Elaboration has two gates, each a PR the
+    developer merges into `develop`:** **Intent Approved** = the stage-1 `intent/` PR
+    (holding `intent.md` only) is merged; **Decomposition Approved** = the stage-2
+    `elaboration/` PR (holding `design.md`) is merged. The merge *is* the approval, because
+    GitHub doesn't allow approving your own PR (`halyard/rules/solo-mode-rules.md` §4). They
+    stay separate PRs so the *what* is settled before the AI designs the *how*.
+{{/solo}}
 
 12. **Decompose an approved Intent into Units of Work** per
-    `nvaid/rules/unit-breakdown-rules.md`. Classify each Unit as a Story or a Bug — never
+    `halyard/rules/unit-breakdown-rules.md`. Classify each Unit as a Story or a Bug — never
     both, never neither — size it to one owning role and one implementation sitting, and
     never split a Unit just to give a second role something to own.
 
 13. **Generate each role's Architecture Contract** per its own
-    `nvaid/rules/<role>-architecture-contract-generation-rules.md` — what it must contain,
+    `halyard/rules/<role>-architecture-contract-generation-rules.md` — what it must contain,
     and whether it's even required for this Intent. Every generated contract is a **draft,
     not a verdict**; the owning Architect accepts, extends, or simplifies it, and sign-off
     is against that final version, never the agent's first draft.
+{{#solo}}
+    **Solo mode:** each contract is a section of the Intent's single `design.md`
+    (`halyard/rules/solo-mode-rules.md` §3), held to the same generation rules. The developer
+    signs off the whole file by merging the stage-2 PR.
+{{/solo}}
 
 14. **An Intent's number is unique across the entire family, never per-repo.** Because
     every repo in the family feeds one shared board (`config.yml` → `family.project_board`),
@@ -64,21 +81,29 @@ family:
     - each **family** repo's open PRs for an in-flight `intent/` branch proposing a number
       at or above it. **Resolve the family set from `config.yml` → `family.repos` (or its
       github_topic), NOT from a blanket `gh repo list <owner>`** — a blanket org list pulls
-      in unrelated repos (including nvaid itself and any future non-family project), whose
+      in unrelated repos (including halyard itself and any future non-family project), whose
       numbers must not mix with the family's.
+{{#solo}}
+    **Solo mode, no board** (`family.project_board` empty): check each family repo's
+    `halyard/intents/` folder on `develop` instead
+    (`gh api repos/<owner>/<repo>/contents/halyard/intents?ref=develop --jq '.[].name'`), plus
+    its open `intent/` PRs as above. With a single-repo family, that's this repo's own
+    `halyard/intents/` on `origin/develop` plus its open `intent/` PRs.
+{{/solo}}
     The new number is one greater than the highest in use anywhere in the family. If `gh`
     isn't authenticated/reachable, stop and ask a human rather than proceed unverified.
-    **Intent-folder naming:** name the folder `nvaid/intents/<repo-name>.<INTENT-ID>-<slug>/`.
+    **Intent-folder naming:** name the folder `halyard/intents/<repo-name>.<INTENT-ID>-<slug>/`.
     `<repo-name>` is the repo's own GitHub name (the `<name>` in its `<owner>/<name>` entry in `family.repos`, e.g. `shop-backend`), not `owning_repo`. The `<repo-name>.` prefix marks which repo owns the Intent so the folder is
     unambiguous out of context, and a cross-repo Intent keeps the same `<INTENT-ID>` in
     every repo it touches.
 
 15. **An ADR's number is unique across the entire family, never per-repo** — same reasoning
-    and the same `gh`-based, config-scoped family check as rule 14. A new ADR takes the next
+    and the same `gh`-based, config-scoped family check as rule 14{{#solo}} (in solo mode
+    without a board, list each family repo's `halyard/adr/` the same way){{/solo}}. A new ADR takes the next
     number not used by any family repo; it is created `status: proposed` and a named human
     accepts it (never self-accepted — rule 1).
 
-16. **Artifact placeholder resolution.** When instantiating or editing a real `nvaid/`
+16. **Artifact placeholder resolution.** When instantiating or editing a real `halyard/`
     artifact (intent, contract, unit design, ADR, change-log row):
     - **Dates** — replace `[date]` / `[YYYY-MM-DD]` with the actual calendar date from the
       system clock (`date +%Y-%m-%d`). Do not guess it or trust a date restated in the

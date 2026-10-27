@@ -2,7 +2,7 @@
 name: release-plan
 description: Drafts the Release Planning Day deployment plan — which Intents are Shippable, their cross-Intent dependencies, and each one's Customer Experience targets. Use when asked to run the Release Plan Skill or prepare for Release Planning Day.
 invoked_by: Release Planning Day (Ceremony 3)
-output: file — nvaid/checkpoints/<checkpoint-name>/plan.md
+output: file — halyard/checkpoints/<checkpoint-name>/plan.md
 ---
 
 # Release Plan Skill
@@ -18,7 +18,7 @@ never to finalize alone.
    schema change.
 3. Flag contradictions between Intents built independently — conflicting API shapes,
    overlapping ownership.
-4. Draft `nvaid/checkpoints/<checkpoint-name>/plan.md`, including each Intent's Customer
+4. Draft `halyard/checkpoints/<checkpoint-name>/plan.md`, including each Intent's Customer
    Experience targets.
 
 ## Boundaries

@@ -1,5 +1,5 @@
 /**
- * Lightweight "a newer nvaid is available" notifier.
+ * Lightweight "a newer halyard is available" notifier.
  *
  * Checks npm for the latest published version and, if the running CLI is behind, prints a
  * one-line nudge with the upgrade command. Deliberately NOT a self-upgrade — the package
@@ -14,9 +14,9 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import pc from "picocolors";
-import { nvaidVersion } from "./paths.js";
+import { halyardVersion } from "./paths.js";
 
-const PKG = "nvaid";
+const PKG = "halyard";
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // once a day
 const FETCH_TIMEOUT_MS = 1500;
 
@@ -26,9 +26,9 @@ interface CacheShape {
 }
 
 function cacheFile(): string {
-  // ~/.cache/nvaid or a temp fallback; a stale/missing cache just means we re-check.
+  // ~/.cache/halyard or a temp fallback; a stale/missing cache just means we re-check.
   const base = process.env.XDG_CACHE_HOME || join(homedir(), ".cache");
-  return join(base || tmpdir(), "nvaid", "update-check.json");
+  return join(base || tmpdir(), "halyard", "update-check.json");
 }
 
 async function readCache(): Promise<CacheShape | null> {
@@ -86,9 +86,9 @@ function isNewer(a: string, b: string): boolean {
  * any command: it awaits a cached/fast check and never throws.
  */
 export async function notifyIfOutdated(): Promise<void> {
-  if (process.env.NVAID_NO_UPDATE_CHECK) return; // escape hatch for CI/scripts
+  if (process.env.HALYARD_NO_UPDATE_CHECK) return; // escape hatch for CI/scripts
 
-  const current = await nvaidVersion();
+  const current = await halyardVersion();
   const cache = await readCache();
   const now = Date.now();
 
@@ -104,9 +104,9 @@ export async function notifyIfOutdated(): Promise<void> {
 
   const line = (s: string) => process.stderr.write(s + "\n");
   line("");
-  line(pc.yellow(`  ┌─ nvaid update available ─────────────────────────────`));
+  line(pc.yellow(`  ┌─ hyd update available ─────────────────────────────`));
   line(pc.yellow("  │ ") + `${pc.dim(current)} → ${pc.green(latest)}`);
   line(pc.yellow("  │ ") + `run: ${pc.cyan(`npm i -g ${PKG}@latest`)}`);
-  line(pc.yellow("  │ ") + pc.dim(`then re-sync your repo: nvaid update`));
+  line(pc.yellow("  │ ") + pc.dim(`then re-sync your repo: hyd update`));
   line(pc.yellow(`  └──────────────────────────────────────────────────────`));
 }

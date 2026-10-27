@@ -2,7 +2,7 @@
 name: quality
 description: Drafts the Quality Architecture Contract for an Intent, per quality-architecture-contract-generation-rules.md. Use when asked to run the Quality Skill or draft a Quality contract during Mob Elaboration.
 invoked_by: Mob Elaboration (Ceremony 1), Phases 2–5
-output: file — nvaid/intents/<INTENT-ID>/contracts/quality-architecture-contract.md
+output: file — {{#team}}halyard/intents/<INTENT-ID>/contracts/quality-architecture-contract.md{{/team}}{{#solo}}§5 Quality of halyard/intents/<INTENT-ID>/design.md{{/solo}}
 ---
 
 # Quality Skill
@@ -20,12 +20,18 @@ Coverage table the Unit Test and Integration Test gates run against.
 3. State which existing SRS NFRs this Intent's Units are held to, beyond the standing
    baseline; say "none beyond baseline" explicitly when true.
 4. Log any Known Gap the room consciously accepted, flagged rather than dropped.
-5. Write `nvaid/intents/<INTENT-ID>/contracts/quality-architecture-contract.md`.
+5. {{#team}}Write `halyard/intents/<INTENT-ID>/contracts/quality-architecture-contract.md`.{{/team}}{{#solo}}Write §5 Quality of `halyard/intents/<INTENT-ID>/design.md` (`{{AIDLC_ROOT}}/solo-mode-rules.md` §3).{{/solo}}
 
 ## Boundaries
 
 - Never define Solution-Specific gates (Build, Code Coverage, Code Quality,
-  Reusability, Regression Test, SAST) — those are fixed in `nvaid/PROJECT-RULES.md`
+  Reusability, Regression Test, SAST) — those are fixed in `halyard/PROJECT-RULES.md`
   §5.2, not something any Intent's contract opts into or out of.
+{{#team}}
 - A draft, not a verdict — flag it awaiting the Quality Architect's Sign-Off; never
   present it as final.
+{{/team}}
+{{#solo}}
+- A draft, not a verdict — flag it awaiting the developer's sign-off; never present
+  it as final.
+{{/solo}}

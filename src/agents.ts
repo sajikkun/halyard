@@ -1,5 +1,5 @@
 /**
- * Agent registry — the single source of truth for every coding agent nvaid can target.
+ * Agent registry — the single source of truth for every coding agent halyard can target.
  *
  * Every agent now follows the Agent Skills open standard: a skill is a directory
  * `<name>/SKILL.md` whose frontmatter `name` matches the folder. So the only thing that
@@ -20,8 +20,8 @@ export interface AgentTarget {
   skillsPath: string;
   /**
    * Where AI-invocable slash-command defs go, if the agent has a command system distinct
-   * from its skills. When set, nvaid commands are written as `<commandsPath>/nvaid/<name>`
-   * so they invoke as `/nvaid:<name>`. When omitted, the nvaid commands are emitted as
+   * from its skills. When set, halyard commands are written as `<commandsPath>/hyd/<name>`
+   * so they invoke as `/hyd:<name>`. When omitted, the halyard commands are emitted as
    * ordinary skills in skillsPath (under the Agent Skills model a command is just an
    * invocable skill), reachable as `/<name>`.
    */
@@ -37,7 +37,7 @@ export const AGENTS: AgentTarget[] = [
     id: "claude",
     label: "Claude Code",
     skillsPath: ".claude/skills",
-    commandsPath: ".claude/commands", // /nvaid:install resolves from .claude/commands/nvaid/install.md
+    commandsPath: ".claude/commands", // /hyd:install resolves from .claude/commands/hyd/install.md
     instructionsFile: "CLAUDE.md",
     bespoke: true,
   },
@@ -45,7 +45,7 @@ export const AGENTS: AgentTarget[] = [
     id: "kiro",
     label: "Kiro",
     skillsPath: ".kiro/skills",
-    instructionsFile: ".kiro/steering/nvaid.md",
+    instructionsFile: ".kiro/steering/halyard.md",
     bespoke: true,
   },
   {

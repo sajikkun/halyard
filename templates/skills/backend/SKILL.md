@@ -2,7 +2,7 @@
 name: backend
 description: Drafts the Backend Architecture Contract for an Intent, per backend-architecture-contract-generation-rules.md. Use when asked to run the Backend Skill or draft a Backend contract during Mob Elaboration.
 invoked_by: Mob Elaboration (Ceremony 1), Phases 2–5
-output: file — nvaid/intents/<INTENT-ID>/contracts/backend-architecture-contract.md
+output: file — {{#team}}halyard/intents/<INTENT-ID>/contracts/backend-architecture-contract.md{{/team}}{{#solo}}§2 Backend of halyard/intents/<INTENT-ID>/design.md{{/solo}}
 ---
 
 # Backend Skill
@@ -26,9 +26,15 @@ consuming role (most often Frontend) reproduces verbatim rather than re-deriving
 5. List components touched (Design-Code Dictionary impact).
 6. State what this contract deliberately excludes — anything the room discussed and
    explicitly deferred, named rather than silently dropped.
-7. Write `nvaid/intents/<INTENT-ID>/contracts/backend-architecture-contract.md`.
+7. {{#team}}Write `halyard/intents/<INTENT-ID>/contracts/backend-architecture-contract.md`.{{/team}}{{#solo}}Write §2 Backend of `halyard/intents/<INTENT-ID>/design.md` (`{{AIDLC_ROOT}}/solo-mode-rules.md` §3).{{/solo}}
 
 ## Boundaries
 
+{{#team}}
 - A draft, not a verdict — flag it awaiting the Backend Solutions Architect's Sign-Off;
   never present it as final.
+{{/team}}
+{{#solo}}
+- A draft, not a verdict — flag it awaiting the developer's sign-off; never present
+  it as final.
+{{/solo}}

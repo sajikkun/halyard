@@ -1,5 +1,5 @@
 /**
- * Read / write a consuming repo's nvaid/config.yml.
+ * Read / write a consuming repo's halyard/config.yml.
  *
  * This file is hand-owned, but init/update manage the `agents` and `generated_with`
  * fields. We parse and re-serialize carefully; we do NOT round-trip comments (the YAML
@@ -10,7 +10,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
-import { NVAID_DIR_NAME, CONFIG_FILE } from "./paths.js";
+import { HALYARD_DIR_NAME, CONFIG_FILE } from "./paths.js";
+import { isMode, DEFAULT_MODE, type Mode } from "./mode.js";
 
 export interface TechStack {
   languages: string[];
@@ -31,8 +32,10 @@ export interface InstallStatus {
   design_code_dictionary: boolean;
 }
 
-export interface NvaidConfig {
+export interface HalyardConfig {
   schema: string;
+  /** team (named architects) or solo (one developer owns every role) */
+  mode: Mode;
   install: InstallStatus;
   project_name: string;
   owning_repo: string;
@@ -42,8 +45,8 @@ export interface NvaidConfig {
   generated_with: string;
 }
 
-/** True only when all three required documents have been authored by /nvaid:install. */
-export function isInstalled(c: NvaidConfig): boolean {
+/** True only when all three required documents have been authored by /hyd:install. */
+export function isInstalled(c: HalyardConfig): boolean {
   return c.install.config && c.install.project_rules && c.install.design_code_dictionary;
 }
 
@@ -61,19 +64,21 @@ const EMPTY_STACK: TechStack = {
 };
 
 export function configPath(projectRoot: string): string {
-  return join(projectRoot, NVAID_DIR_NAME, CONFIG_FILE);
+  return join(projectRoot, HALYARD_DIR_NAME, CONFIG_FILE);
 }
 
 export function hasConfig(projectRoot: string): boolean {
   return existsSync(configPath(projectRoot));
 }
 
-export async function readConfig(projectRoot: string): Promise<NvaidConfig> {
+export async function readConfig(projectRoot: string): Promise<HalyardConfig> {
   const raw = await readFile(configPath(projectRoot), "utf8");
   const parsed = parse(raw) ?? {};
   const install = parsed.install ?? {};
   return {
-    schema: parsed.schema ?? "nvaid/v1",
+    schema: parsed.schema ?? "halyard/v1",
+    // configs written before modes existed are team configs
+    mode: isMode(parsed.mode) ? parsed.mode : DEFAULT_MODE,
     install: {
       config: install.config === true,
       project_rules: install.project_rules === true,
@@ -94,11 +99,14 @@ export async function readConfig(projectRoot: string): Promise<NvaidConfig> {
  */
 export async function setConfigFields(
   projectRoot: string,
-  fields: { agents?: string[]; owning_repo?: string; generated_with?: string; project_name?: string },
+  fields: { agents?: string[]; owning_repo?: string; generated_with?: string; project_name?: string; mode?: Mode },
 ): Promise<void> {
   const path = configPath(projectRoot);
   let text = await readFile(path, "utf8");
 
+  if (fields.mode !== undefined) {
+    text = replaceScalar(text, "mode", `"${fields.mode}"`);
+  }
   if (fields.project_name !== undefined) {
     text = replaceScalar(text, "project_name", `"${fields.project_name}"`);
   }

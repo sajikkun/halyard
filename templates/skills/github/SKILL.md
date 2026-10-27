@@ -35,14 +35,15 @@ review → iterate → manual merge. This Skill never merges anything itself.
   to this PR would wipe the Intent approval. Not a Construction branch type — nothing here is code, so treating it as `feature/` would
   misdescribe what actually changed and would demand a Story ID that doesn't exist yet
   (a Unit of Work isn't decided until Elaboration produces `unit-breakdown.md` in the
-  first place). Review on this branch's PR is the CX Architect (or relevant Architect)
+  first place). Review on this branch's PR is {{#team}}the CX Architect (or relevant Architect){{/team}}{{#solo}}the developer{{/solo}}
   reading the artifact for content, not CI verifying code — the gates still run, but
   pass on a markdown-only diff as a no-op, not as a meaningful check of anything.
   Example: `intent/001-login-navigation-shell`.
 - **`elaboration/<intent-id>-<slug>`** — Elaboration **stage 2**, cut from `develop`
-  **after** the stage-1 `intent/` PR has merged: holds the per-role `contracts/` files
+  **after** the stage-1 `intent/` PR has merged: holds {{#team}}the per-role `contracts/` files
   and `unit-breakdown.md`. Approving and merging this PR is the **Decomposition
-  Approved** gate. Same `<intent-id>-<slug>` as its stage-1 branch, and the same
+  Approved** gate.{{/team}}{{#solo}}`design.md`. The developer merging this PR is the
+  **Decomposition Approved** gate.{{/solo}} Same `<intent-id>-<slug>` as its stage-1 branch, and the same
   markdown-only review footing. Example: `elaboration/007-google-profile-photo`.
 - **`chore/<slug>`** — repo tooling, config, or meta work with no application code and
   no Unit of Work behind it: a new Skill, a CI/CD workflow change, a convention update
@@ -83,9 +84,17 @@ use a plain `chore: <what changed, imperative mood>`, no parenthesized scope.
 ### 3. Open the pull request
 
 Target `develop` (or `master` for a `hotfix/`). The PR body links the Unit's design doc
+{{#team}}
 and its Quality Architecture Contract, and lists which Acceptance Criteria this PR
 closes. Request the owning Architect (the human) as reviewer explicitly — never leave
 the reviewer field empty.
+{{/team}}
+{{#solo}}
+and its `design.md` §5 Quality section, and lists which Acceptance Criteria this PR
+closes. There's no one else to request as reviewer: the developer reviews and merges it.
+If `develop`'s branch protection requires an approving review, say so and point to
+`{{AIDLC_ROOT}}/solo-mode-rules.md` §4. Don't work around it.
+{{/solo}}
 
 **PR title format** — bracket tags, not a Conventional Commit prefix. Commits keep the
 `<type>(<unit-id>):` style from step 2; the PR *title* uses this readable form instead:
@@ -137,7 +146,7 @@ server's structured comment tools, if configured):
 
 ### 7. Hand off to Merge Approval
 
-Once review is approved and every gate is green, flag the PR ready. Stop there. For a
+Once {{#team}}review is approved and {{/team}}every gate is green, flag the PR ready{{#solo}} for the developer to merge{{/solo}}. Stop there. For a
 `hotfix/`, note explicitly in the PR that a second merge into `develop` is still needed
 after `master` receives this one — never assume the human will remember to ask for it.
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * nvaid CLI entry point.
+ * halyard CLI entry point.
  *
  * Commands:
- *   nvaid init       onboard a repo: pick agents, inject skills, drop the nvaid/ folder
- *   nvaid update     re-sync agent files to the installed nvaid version
- *   nvaid validate   fail if generated files are stale or hand-edited (CI gate)
+ *   hyd init       onboard a repo: pick agents, inject skills, drop the halyard/ folder
+ *   hyd update     re-sync agent files to the installed halyard version
+ *   hyd validate   fail if generated files are stale or hand-edited (CI gate)
  *
  * Command logic lives in src/commands/*; this file only wires argument parsing.
  */
@@ -13,35 +13,37 @@ import { Command } from "commander";
 import { runInit } from "./commands/init.js";
 import { runUpdate } from "./commands/update.js";
 import { runValidate } from "./commands/validate.js";
-import { nvaidVersion } from "./paths.js";
+import { halyardVersion } from "./paths.js";
 import { notifyIfOutdated } from "./updateNotifier.js";
 
 const program = new Command();
 
 program
-  .name("nvaid")
-  .description("nvaid — install an AI-DLC skills + workflow toolkit into any coding agent")
-  .version(await nvaidVersion());
+  .name("hyd")
+  .description("halyard — install an AI-DLC skills + workflow toolkit into any coding agent")
+  .version(await halyardVersion());
 
 program
   .command("init")
-  .description("Onboard this repo: select coding agents, inject skills, create the nvaid/ folder")
+  .description("Onboard this repo: select coding agents, inject skills, create the halyard/ folder")
   .option("--agents <ids>", "comma-separated agent ids (skips the prompt)", (v) => v.split(","))
   .option("--owning-repo <tier>", "owning_repo value written to config.yml")
   .option("--project-name <name>", "project_name value written to config.yml")
+  .option("--mode <mode>", "workflow mode: team (named architects) or solo (one developer)")
   .option("-y, --yes", "accept defaults, no prompts (CI)")
   .action(async (opts) => {
     await runInit({
       agents: opts.agents,
       owningRepo: opts.owningRepo,
       projectName: opts.projectName,
+      mode: opts.mode,
       yes: opts.yes,
     });
   });
 
 program
   .command("update")
-  .description("Re-sync agent files to the installed nvaid version")
+  .description("Re-sync agent files to the installed halyard version")
   .action(async () => {
     await runUpdate();
   });

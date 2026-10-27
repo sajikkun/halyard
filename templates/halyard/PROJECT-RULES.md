@@ -9,9 +9,9 @@ status: draft
 
 # <project> — Project Standards & Engineering Rules
 
-> **Template dropped by `nvaid init` — HAND-OWNED, fill this in.**
-> `nvaid update` never overwrites this file. It is intentionally project-specific:
-> nvaid ships the universal skills and contract/unit rules, but *this* file is where a
+> **Template dropped by `hyd init` — HAND-OWNED, fill this in.**
+> `hyd update` never overwrites this file. It is intentionally project-specific:
+> halyard ships the universal skills and contract/unit rules, but *this* file is where a
 > developer records what is unique to this repo — the approved stack, the guardrails, the
 > data rules. Delete these template notes once you have real content.
 
@@ -58,14 +58,14 @@ already covers.>
 
 - [ ] The Unit's stated Acceptance Criteria are met and each traces to a covering test.
 - [ ] Static analysis / security scan passes with no unresolved High findings.
-- [ ] Merge approved by the owning reviewer on gate evidence.
-- [ ] `nvaid/DESIGN-CODE-DICTIONARY.md` updated for every component added/moved/removed.
+- [ ] Merge approved by {{#team}}the owning reviewer{{/team}}{{#solo}}the developer (by merging){{/solo}} on gate evidence.
+- [ ] `halyard/DESIGN-CODE-DICTIONARY.md` updated for every component added/moved/removed.
 
 ### 5.2 Quality gates (CI gates that must pass before merge)
 
 <List the gates CI enforces for this project — build, unit test, coverage floor,
 code quality, security scan, etc. Keep project-wide gates here; per-Intent gates come
-from each Quality Architecture Contract.>
+from each {{#team}}Quality Architecture Contract{{/team}}{{#solo}}`design.md` §5 Quality section{{/solo}}.>
 
 ## 6. Known gaps (do not silently resolve)
 
@@ -75,8 +75,12 @@ from each Quality Architecture Contract.>
 
 Rules **1–10** below are this repo's universal guardrails (edit the bracketed specifics for
 your project). Rules **11 and up are family-wide** and are maintained in the generated
-`nvaid/rules/family-rules.md` — do **not** restate them here; change them upstream in nvaid.
+`halyard/rules/family-rules.md` — do **not** restate them here; change them upstream in halyard.
 They bind this repo exactly as 1–10 do.
+{{#solo}}
+This project runs in **solo mode**: read every rule, here and in `halyard/rules/`, through
+`halyard/rules/solo-mode-rules.md`, which maps each team role to the developer.
+{{/solo}}
 
 1. **Propose, don't dispose.** Draft requirements, designs, code, and tests — a named
    human approves before anything is merged, deployed, or treated as final. Never approve
@@ -88,7 +92,7 @@ They bind this repo exactly as 1–10 do.
    or an already-approved design, flag the conflict explicitly rather than quietly
    resolving it either way.
 4. **No unreviewed new dependencies.** Do not add a new library, service, or external API
-   call without flagging it for the reviewing Architect, even if it seems like the
+   call without flagging it for {{#team}}the reviewing Architect{{/team}}{{#solo}}the developer{{/solo}}, even if it seems like the
    obviously correct tool.
 5. **Off-limits without explicit approval:** production infrastructure config, deploy
    pipelines, anything under `[infra/prod/** — adjust to your layout]`.
@@ -102,13 +106,13 @@ They bind this repo exactly as 1–10 do.
    grows large enough to risk losing earlier reasoning, checkpoint (commit, update
    artifacts) rather than pushing through in one long session.
 9. **Artifact hygiene is part of the task.** Generating code without updating the
-   corresponding `nvaid/` artifacts — this file and the Design-Code Dictionary included —
+   corresponding `halyard/` artifacts — this file and the Design-Code Dictionary included —
    is an incomplete task, not a finished one.
 10. **Identify AI-assisted changes as such** in commit messages and PR descriptions, so
     the reviewing human knows what to scrutinize. All AI-generated code is treated as
     untrusted until reviewed — the same standard applied to code from a new contributor.
 
-**11 and up — family-wide rules.** See `nvaid/rules/family-rules.md` (generated). It
+**11 and up — family-wide rules.** See `halyard/rules/family-rules.md` (generated). It
 covers ticketing (11), unit decomposition (12), contract generation (13), family-wide
 Intent numbering (14), family-wide ADR numbering (15), and artifact-placeholder resolution
 (16).
@@ -117,4 +121,4 @@ Intent numbering (14), family-wide ADR numbering (15), and artifact-placeholder 
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| 0.1.0 | <YYYY-MM-DD> | Initial draft from the nvaid template | <name> |
+| 0.1.0 | <YYYY-MM-DD> | Initial draft from the halyard template | <name> |

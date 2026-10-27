@@ -10,7 +10,7 @@ version: 1.0
 
 Reads a pull request against this repo's *current* conventions and recommends one of
 three outcomes. The rules it checks against are never hardcoded here — they live in
-`.claude/skills/github/SKILL.md` and `nvaid/PROJECT-RULES.md`, read fresh every
+`.claude/skills/github/SKILL.md` and `halyard/PROJECT-RULES.md`, read fresh every
 time, so this Skill can't drift out of sync with the conventions as they evolve.
 
 **This Skill never takes the action it recommends.** It doesn't call `gh pr merge`,
@@ -27,7 +27,7 @@ gh pr diff $ARGUMENTS
 ```
 
 Also re-read `.claude/skills/github/SKILL.md` (this repo's copy) and
-`nvaid/PROJECT-RULES.md` before judging anything — the checks below are applied
+`halyard/PROJECT-RULES.md` before judging anything — the checks below are applied
 against whatever those files currently say, not a memorized version of them.
 
 ### 2. Check branch type against actual content
@@ -63,7 +63,7 @@ correctly.
 ### 6. Check path and file-shape conventions
 
 Compare every changed/added file's path against this repo's established shape
-(`nvaid/intents/INTENT-XXX-slug/`, `.claude/skills/<name>/SKILL.md`, `deploy/`,
+(`halyard/intents/INTENT-XXX-slug/`, `.claude/skills/<name>/SKILL.md`, `deploy/`,
 etc. — read from `PROJECT-RULES.md` and the existing repo tree, not assumed). A new
 top-level convention appearing alongside an existing one for the same concept (two
 different intent-tracking shapes, two different daily-report mechanisms) is a
